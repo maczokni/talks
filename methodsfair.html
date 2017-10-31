@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Methods Fair Interactive Data Visualisation</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Réka Solymosi" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/plotly-binding/plotly.js"></script>
+    <script src="libs/typedarray/typedarray.min.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+    <link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="libs/plotlyjs/plotly-latest.min.js"></script>
+    <link href="libs/leaflet/leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet/leaflet.js"></script>
+    <link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
+    <link href="libs/leaflet-label/leaflet.label.css" rel="stylesheet" />
+    <script src="libs/leaflet-label/leaflet.label.js"></script>
+    <script src="libs/Proj4Leaflet/proj4-compressed.js"></script>
+    <script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
+    <script src="libs/leaflet-binding/leaflet.js"></script>
+    <script src="libs/leaflet-providers/leaflet-providers.js"></script>
+    <script src="libs/leaflet-providers-plugin/leaflet-providers-plugin.js"></script>
+    <link rel="stylesheet" href="my-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# <p>Methods Fair<br />
+Interactive Data Visualisation</p>
+### Réka Solymosi
+### 31-Oct-2017
+
+---
+
+
+
+
+&lt;style type="text/css"&gt;
+
+
+code.r{
+  font-size: 12px;
+}
+
+&lt;/style&gt;
+
+
+
+
+
+### The grammar of graphics
+
+![](/Users/reka/Desktop/course-incubator/images/table.png)
+
+
+[Wickham, H. (2010). A layered grammar of graphics. Journal of Computational and Graphical Statistics, 19(1), 3-28.](http://vita.had.co.nz/papers/layered-grammar.pdf)
+
+---
+### The grammar of graphics
+
+![](/Users/reka/Desktop/course-incubator/images/layers.png)
+
+
+
+[Wickham, H. (2010). A layered grammar of graphics. Journal of Computational and Graphical Statistics, 19(1), 3-28.](http://vita.had.co.nz/papers/layered-grammar.pdf)
+---
+### The grammar of graphics
+
+![](/Users/reka/Desktop/course-incubator/images/combined.png)
+
+
+[Wickham, H. (2010). A layered grammar of graphics. Journal of Computational and Graphical Statistics, 19(1), 3-28.](http://vita.had.co.nz/papers/layered-grammar.pdf)
+
+---
+### The grammar of graphics
+
+![](/Users/reka/Desktop/course-incubator/images/combined.png)
+
+
+[Wickham, H. (2010). A layered grammar of graphics. Journal of Computational and Graphical Statistics, 19(1), 3-28.](http://vita.had.co.nz/papers/layered-grammar.pdf)
+
+
+
+---
+### Creating a ggplot
+
+
+If you don't already have the ggplot2 package, you'll have to install
+
+
+```r
+install.packages(ggplot2)
+```
+
+
+Then you can build your ggplots:
+
+
+
+```r
+library(ggplot2)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-2-1.png" height="400px" /&gt;
+ 
+  
+
+---
+### Pseudocode
+
+
+
+```r
+ggplot(data = &lt;DATA&gt;) + 
+  &lt;GEOM_FUNCTION&gt;(mapping = aes(&lt;MAPPINGS&gt;))
+```
+
+
+
+---
+### 3 variables to 1 plot: `colour =`
+
+
+
+```r
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, colour = class))
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-4-1.png" height="350px" /&gt;
+
+---
+### 3 variables to 1 plot: `size =`
+
+
+```r
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, size = class))
+```
+
+```
+## Warning: Using size for a discrete variable is not advised.
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-5-1.png" height="350px" /&gt;
+
+
+
+---
+### 3 variables to 1 plot: `shape =`
+
+
+```r
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, shape = class))
+```
+
+```
+## Warning: The shape palette can deal with a maximum of 6 discrete values
+## because more than 6 becomes difficult to discriminate; you have 7.
+## Consider specifying shapes manually if you must have them.
+```
+
+```
+## Warning: Removed 62 rows containing missing values (geom_point).
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-6-1.png" height="350px" /&gt;
+
+More about shapes: [http://www.cookbook-r.com/Graphs/Shapes_and_line_types/](http://www.cookbook-r.com/Graphs/Shapes_and_line_types/)
+
+---
+### 3 variables to 1 plot: `facet_wrap()`
+
+
+```r
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 2)
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-7-1.png" height="350px" /&gt;
+
+
+---
+### Geoms ++
+
+![](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2-1.png)
+
+
+
+---
+###Axes
+
+```r
+bp &lt;- ggplot(PlantGrowth, aes(x=group, y=weight)) +
+    geom_boxplot()
+bp
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-8-1.png" height="300" /&gt;
+
+---
+###Axes
+
+
+
+```r
+bp + coord_flip()
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-9-1.png" height="300" /&gt;
+
+
+---
+###Axes
+
+
+
+```r
+bp + scale_x_discrete(breaks=c("ctrl", "trt1", "trt2"),
+                      labels=c("Control", "Treat 1", "Treat 2"))
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-10-1.png" height="300" /&gt;
+
+
+---
+###Axes
+
+
+
+```r
+# Hide x tick marks, labels, and grid lines
+bp + scale_x_discrete(breaks=NULL)
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-11-1.png" height="300" /&gt;
+
+
+
+---
+###Axes
+
+
+
+```r
+# Hide x tick marks, labels, and grid lines
+bp + theme(axis.text.x = element_text(face="bold", color="#993333", 
+                           size=14, angle=45),
+          axis.text.y = element_text(face="bold", color="#993333", 
+                           size=14, angle=45))
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-12-1.png" height="300" /&gt;
+
+
+---
+###Rcolorbrewer
+
+[Sequential, diverging and qualitative colour scales from colorbrewer.org](http://ggplot2.tidyverse.org/reference/scale_brewer.html)
+
+&lt;img src="/Users/reka/Dropbox (The University of Manchester)/talks/methodsfair_files/colourbrewer.png" width="600px" /&gt;
+
+
+---
+###Rcolorbrewer
+
+
+```r
+dsamp &lt;- diamonds[sample(nrow(diamonds), 1000), ]
+(d &lt;- ggplot(dsamp, aes(carat, price)) +
+  geom_point(aes(colour = clarity)))
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-14-1.png" height="300" /&gt;
+
+
+---
+###Rcolorbrewer
+
+
+```r
+d + scale_colour_brewer()
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-15-1.png" height="300" /&gt;
+
+
+---
+###Rcolorbrewer
+
+
+```r
+d + scale_colour_brewer(palette = "Greens")
+```
+
+&lt;img src="methodsfair_files/figure-html/unnamed-chunk-16-1.png" height="300" /&gt;
+
+
+---
+###Rcolorbrewer
+
+
+```r
+?scales::brewer_pal
+```
+
+
+
+---
+### Interactivity! 
+
+
+```r
+library(plotly)
+```
+
+```r
+dsamp &lt;- diamonds[sample(nrow(diamonds), 1000), ]
+d &lt;- ggplot(dsamp, aes(carat, price)) +
+  geom_point(aes(colour = clarity))
+ggplotly( d + scale_colour_brewer(palette = "Greens"))
+```
+
+```
+## We recommend that you use the dev version of ggplot2 with `ggplotly()`
+## Install it with: `devtools::install_github('hadley/ggplot2')`
+```
+
+<div id="1fef112439c1" style="width:504px;height:504px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="1fef112439c1">{"x":{"data":[{"x":[2.06,1.49,0.5,1.11,0.7,0.7,0.9,1.69,1.51,2.31,1,1.19,0.7,2.02],"y":[6091,6175,627,3183,1158,1040,1939,5182,5750,7257,3136,3794,1138,6346],"text":["clarity: I1<br />carat: 2.06<br />price:  6091","clarity: I1<br />carat: 1.49<br />price:  6175","clarity: I1<br />carat: 0.50<br />price:   627","clarity: I1<br />carat: 1.11<br />price:  3183","clarity: I1<br />carat: 0.70<br />price:  1158","clarity: I1<br />carat: 0.70<br />price:  1040","clarity: I1<br />carat: 0.90<br />price:  1939","clarity: I1<br />carat: 1.69<br />price:  5182","clarity: I1<br />carat: 1.51<br />price:  5750","clarity: I1<br />carat: 2.31<br />price:  7257","clarity: I1<br />carat: 1.00<br />price:  3136","clarity: I1<br />carat: 1.19<br />price:  3794","clarity: I1<br />carat: 0.70<br />price:  1138","clarity: I1<br />carat: 2.02<br />price:  6346"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(247,252,245,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(247,252,245,1)"}},"hoveron":"points","name":"I1","legendgroup":"I1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2.14,1.34,1.01,2.23,0.5,1,1,1.01,2.29,0.36,1.69,0.36,1.32,0.71,0.63,0.3,2.63,2.14,1.04,2.06,1.2,1.2,0.4,0.59,2.16,1.11,1.21,2.01,0.51,1.11,0.71,1.09,1.02,1.33,0.72,0.5,0.71,0.92,0.9,1.24,0.8,1.01,0.52,0.43,0.63,1.01,1.01,1.2,1.08,0.41,1,1.01,0.97,0.99,0.78,1.01,1.24,1.62,2.07,2.18,2.01,1.19,2.02,1.16,0.5,1.01,1.11,1.51,2.03,1.15,0.7,1.64,1.5,0.91,1.48,0.81,0.31,0.95,1.59,0.9,1,0.41,0.91,2.29,0.72,1.06,1.04,1.01,0.81,2.01,0.31,1.07,2.01,0.42,1.09,1.01,1.15,1.01,1.01,2.14,1.09,1.01,0.33,1.05,0.31,1,1.09,0.73,0.91,1.07,0.72,1.5,2.02,1.28,0.7,0.74,0.7,0.5,2.03,2.14,2.07,1.37,1.01,0.5,2.28,0.9,0.96,1.55,0.38,1.06,1.22,0.9,0.54,0.77,2.02,1.13,1.52,1.24,2.5,1.03,1.53,1.51,1.03,1.01,2.13,1.05,2.03,0.9,0.33,0.53,0.41,0.43,0.43,0.39,0.66,0.8,2,0.42,1.02,2.1,0.9,1.38,0.95,0.52,0.91,1.11],"y":[4295,17673,6904,3856,16805,1175,4781,2912,4435,15366,505,10317,473,6660,2360,1169,447,16914,13825,3861,16603,5712,4234,596,1286,17263,4196,4472,11903,1051,4168,1902,5167,3633,6668,1907,1239,1740,3153,3534,5969,2804,4327,1001,919,1407,3897,4197,5116,4857,703,4383,4668,3729,4852,2340,4242,5583,6350,17614,14277,12423,4078,8640,3605,926,3674,4120,7823,12268,5120,2110,7750,8820,3531,6216,2926,558,3750,11251,3449,3293,784,3388,14500,2160,3958,4547,4338,2100,16624,593,6060,11780,882,4244,2862,4021,4242,3605,17127,4078,4416,492,4714,421,3646,3961,2703,3034,4413,2155,9959,12108,5654,2536,2398,2131,1240,12021,17582,11094,7365,3981,1077,18055,3740,3016,10275,568,3936,5671,3368,1105,2162,14341,5014,9193,4278,14502,4414,8455,10935,4250,3801,13370,3615,13621,2639,492,1173,692,716,716,581,1584,2487,11036,552,3027,16629,3553,5765,4070,1125,3408,5547],"text":["clarity: SI2<br />carat: 1.00<br />price:  4295","clarity: SI2<br />carat: 2.14<br />price: 17673","clarity: SI2<br />carat: 1.34<br />price:  6904","clarity: SI2<br />carat: 1.01<br />price:  3856","clarity: SI2<br />carat: 2.23<br />price: 16805","clarity: SI2<br />carat: 0.50<br />price:  1175","clarity: SI2<br />carat: 1.00<br />price:  4781","clarity: SI2<br />carat: 1.00<br />price:  2912","clarity: SI2<br />carat: 1.01<br />price:  4435","clarity: SI2<br />carat: 2.29<br />price: 15366","clarity: SI2<br />carat: 0.36<br />price:   505","clarity: SI2<br />carat: 1.69<br />price: 10317","clarity: SI2<br />carat: 0.36<br />price:   473","clarity: SI2<br />carat: 1.32<br />price:  6660","clarity: SI2<br />carat: 0.71<br />price:  2360","clarity: SI2<br />carat: 0.63<br />price:  1169","clarity: SI2<br />carat: 0.30<br />price:   447","clarity: SI2<br />carat: 2.63<br />price: 16914","clarity: SI2<br />carat: 2.14<br />price: 13825","clarity: SI2<br />carat: 1.04<br />price:  3861","clarity: SI2<br />carat: 2.06<br />price: 16603","clarity: SI2<br />carat: 1.20<br />price:  5712","clarity: SI2<br />carat: 1.20<br />price:  4234","clarity: SI2<br />carat: 0.40<br />price:   596","clarity: SI2<br />carat: 0.59<br />price:  1286","clarity: SI2<br />carat: 2.16<br />price: 17263","clarity: SI2<br />carat: 1.11<br />price:  4196","clarity: SI2<br />carat: 1.21<br />price:  4472","clarity: SI2<br />carat: 2.01<br />price: 11903","clarity: SI2<br />carat: 0.51<br />price:  1051","clarity: SI2<br />carat: 1.11<br />price:  4168","clarity: SI2<br />carat: 0.71<br />price:  1902","clarity: SI2<br />carat: 1.09<br />price:  5167","clarity: SI2<br />carat: 1.02<br />price:  3633","clarity: SI2<br />carat: 1.33<br />price:  6668","clarity: SI2<br />carat: 0.72<br />price:  1907","clarity: SI2<br />carat: 0.50<br />price:  1239","clarity: SI2<br />carat: 0.71<br />price:  1740","clarity: SI2<br />carat: 0.92<br />price:  3153","clarity: SI2<br />carat: 0.90<br />price:  3534","clarity: SI2<br />carat: 1.24<br />price:  5969","clarity: SI2<br />carat: 0.80<br />price:  2804","clarity: SI2<br />carat: 1.01<br />price:  4327","clarity: SI2<br />carat: 0.52<br />price:  1001","clarity: SI2<br />carat: 0.43<br />price:   919","clarity: SI2<br />carat: 0.63<br />price:  1407","clarity: SI2<br />carat: 1.01<br />price:  3897","clarity: SI2<br />carat: 1.01<br />price:  4197","clarity: SI2<br />carat: 1.20<br />price:  5116","clarity: SI2<br />carat: 1.08<br />price:  4857","clarity: SI2<br />carat: 0.41<br />price:   703","clarity: SI2<br />carat: 1.00<br />price:  4383","clarity: SI2<br />carat: 1.01<br />price:  4668","clarity: SI2<br />carat: 0.97<br />price:  3729","clarity: SI2<br />carat: 0.99<br />price:  4852","clarity: SI2<br />carat: 0.78<br />price:  2340","clarity: SI2<br />carat: 1.01<br />price:  4242","clarity: SI2<br />carat: 1.24<br />price:  5583","clarity: SI2<br />carat: 1.62<br />price:  6350","clarity: SI2<br />carat: 2.07<br />price: 17614","clarity: SI2<br />carat: 2.18<br />price: 14277","clarity: SI2<br />carat: 2.01<br />price: 12423","clarity: SI2<br />carat: 1.19<br />price:  4078","clarity: SI2<br />carat: 2.02<br />price:  8640","clarity: SI2<br />carat: 1.16<br />price:  3605","clarity: SI2<br />carat: 0.50<br />price:   926","clarity: SI2<br />carat: 1.01<br />price:  3674","clarity: SI2<br />carat: 1.11<br />price:  4120","clarity: SI2<br />carat: 1.51<br />price:  7823","clarity: SI2<br />carat: 2.03<br />price: 12268","clarity: SI2<br />carat: 1.15<br />price:  5120","clarity: SI2<br />carat: 0.70<br />price:  2110","clarity: SI2<br />carat: 1.64<br />price:  7750","clarity: SI2<br />carat: 1.50<br />price:  8820","clarity: SI2<br />carat: 0.91<br />price:  3531","clarity: SI2<br />carat: 1.48<br />price:  6216","clarity: SI2<br />carat: 0.81<br />price:  2926","clarity: SI2<br />carat: 0.31<br />price:   558","clarity: SI2<br />carat: 0.95<br />price:  3750","clarity: SI2<br />carat: 1.59<br />price: 11251","clarity: SI2<br />carat: 0.90<br />price:  3449","clarity: SI2<br />carat: 1.00<br />price:  3293","clarity: SI2<br />carat: 0.41<br />price:   784","clarity: SI2<br />carat: 0.91<br />price:  3388","clarity: SI2<br />carat: 2.29<br />price: 14500","clarity: SI2<br />carat: 0.72<br />price:  2160","clarity: SI2<br />carat: 1.06<br />price:  3958","clarity: SI2<br />carat: 1.04<br />price:  4547","clarity: SI2<br />carat: 1.01<br />price:  4338","clarity: SI2<br />carat: 0.81<br />price:  2100","clarity: SI2<br />carat: 2.01<br />price: 16624","clarity: SI2<br />carat: 0.31<br />price:   593","clarity: SI2<br />carat: 1.07<br />price:  6060","clarity: SI2<br />carat: 2.01<br />price: 11780","clarity: SI2<br />carat: 0.42<br />price:   882","clarity: SI2<br />carat: 1.09<br />price:  4244","clarity: SI2<br />carat: 1.01<br />price:  2862","clarity: SI2<br />carat: 1.15<br />price:  4021","clarity: SI2<br />carat: 1.01<br />price:  4242","clarity: SI2<br />carat: 1.01<br />price:  3605","clarity: SI2<br />carat: 2.14<br />price: 17127","clarity: SI2<br />carat: 1.09<br />price:  4078","clarity: SI2<br />carat: 1.01<br />price:  4416","clarity: SI2<br />carat: 0.33<br />price:   492","clarity: SI2<br />carat: 1.05<br />price:  4714","clarity: SI2<br />carat: 0.31<br />price:   421","clarity: SI2<br />carat: 1.00<br />price:  3646","clarity: SI2<br />carat: 1.09<br />price:  3961","clarity: SI2<br />carat: 0.73<br />price:  2703","clarity: SI2<br />carat: 0.91<br />price:  3034","clarity: SI2<br />carat: 1.07<br />price:  4413","clarity: SI2<br />carat: 0.72<br />price:  2155","clarity: SI2<br />carat: 1.50<br />price:  9959","clarity: SI2<br />carat: 2.02<br />price: 12108","clarity: SI2<br />carat: 1.28<br />price:  5654","clarity: SI2<br />carat: 0.70<br />price:  2536","clarity: SI2<br />carat: 0.74<br />price:  2398","clarity: SI2<br />carat: 0.70<br />price:  2131","clarity: SI2<br />carat: 0.50<br />price:  1240","clarity: SI2<br />carat: 2.03<br />price: 12021","clarity: SI2<br />carat: 2.14<br />price: 17582","clarity: SI2<br />carat: 2.07<br />price: 11094","clarity: SI2<br />carat: 1.37<br />price:  7365","clarity: SI2<br />carat: 1.01<br />price:  3981","clarity: SI2<br />carat: 0.50<br />price:  1077","clarity: SI2<br />carat: 2.28<br />price: 18055","clarity: SI2<br />carat: 0.90<br />price:  3740","clarity: SI2<br />carat: 0.96<br />price:  3016","clarity: SI2<br />carat: 1.55<br />price: 10275","clarity: SI2<br />carat: 0.38<br />price:   568","clarity: SI2<br />carat: 1.06<br />price:  3936","clarity: SI2<br />carat: 1.22<br />price:  5671","clarity: SI2<br />carat: 0.90<br />price:  3368","clarity: SI2<br />carat: 0.54<br />price:  1105","clarity: SI2<br />carat: 0.77<br />price:  2162","clarity: SI2<br />carat: 2.02<br />price: 14341","clarity: SI2<br />carat: 1.13<br />price:  5014","clarity: SI2<br />carat: 1.52<br />price:  9193","clarity: SI2<br />carat: 1.24<br />price:  4278","clarity: SI2<br />carat: 2.50<br />price: 14502","clarity: SI2<br />carat: 1.03<br />price:  4414","clarity: SI2<br />carat: 1.53<br />price:  8455","clarity: SI2<br />carat: 1.51<br />price: 10935","clarity: SI2<br />carat: 1.03<br />price:  4250","clarity: SI2<br />carat: 1.01<br />price:  3801","clarity: SI2<br />carat: 2.13<br />price: 13370","clarity: SI2<br />carat: 1.05<br />price:  3615","clarity: SI2<br />carat: 2.03<br />price: 13621","clarity: SI2<br />carat: 0.90<br />price:  2639","clarity: SI2<br />carat: 0.33<br />price:   492","clarity: SI2<br />carat: 0.53<br />price:  1173","clarity: SI2<br />carat: 0.41<br />price:   692","clarity: SI2<br />carat: 0.43<br />price:   716","clarity: SI2<br />carat: 0.43<br />price:   716","clarity: SI2<br />carat: 0.39<br />price:   581","clarity: SI2<br />carat: 0.66<br />price:  1584","clarity: SI2<br />carat: 0.80<br />price:  2487","clarity: SI2<br />carat: 2.00<br />price: 11036","clarity: SI2<br />carat: 0.42<br />price:   552","clarity: SI2<br />carat: 1.02<br />price:  3027","clarity: SI2<br />carat: 2.10<br />price: 16629","clarity: SI2<br />carat: 0.90<br />price:  3553","clarity: SI2<br />carat: 1.38<br />price:  5765","clarity: SI2<br />carat: 0.95<br />price:  4070","clarity: SI2<br />carat: 0.52<br />price:  1125","clarity: SI2<br />carat: 0.91<br />price:  3408","clarity: SI2<br />carat: 1.11<br />price:  5547"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(229,245,224,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(229,245,224,1)"}},"hoveron":"points","name":"SI2","legendgroup":"SI2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.9,0.5,0.83,0.44,0.76,1.01,0.9,0.3,0.3,0.72,0.38,0.7,2,1.2,0.66,0.52,0.53,0.7,0.7,1.28,1.01,1.24,0.71,0.9,1.01,1.73,1.01,0.34,0.41,1,0.53,1,2.02,0.9,1.64,0.71,2.31,0.37,0.43,0.9,0.35,0.35,1.4,0.72,0.9,0.87,1.11,1.12,1.21,0.7,0.94,1.43,0.91,0.36,0.9,1.7,0.42,1.26,1.54,0.91,0.79,1.5,0.78,0.43,0.53,0.38,1.16,0.52,1,0.5,0.32,1.52,1.53,1.51,1.01,1.24,0.32,0.34,1,0.4,1.08,0.36,1.93,1.01,0.83,1,0.7,1,0.55,0.35,0.9,1.24,1.04,1.71,1,0.7,0.58,0.7,0.92,0.3,0.53,0.38,0.96,0.51,0.51,1.2,0.5,0.36,1.26,0.31,0.71,2.03,0.93,0.81,1.03,0.43,0.54,1,0.91,0.32,0.77,0.93,0.57,2.14,1.01,1.51,1.53,0.3,1.51,1,1.56,0.75,0.4,0.55,1.5,1.1,0.52,0.65,0.97,0.7,0.3,1.53,0.3,0.36,0.3,2.03,0.92,1.02,0.34,1.02,0.32,0.3,0.36,1.01,1.83,1,1,0.83,0.7,1.13,0.5,0.79,0.51,0.43,1.21,0.79,0.33,0.82,0.84,0.52,0.61,0.56,0.41,0.9,1.05,0.91,0.9,1.08,0.3,0.79,1,0.54,0.36,1.21,0.5,0.71,0.7,1.13,1.01,0.43,0.5,0.31,0.55,0.72,0.52,0.4,0.72,1.07,1.36,0.55,1.22,1.09,0.83,0.9,0.3,0.4,1.76,0.52,1.01,0.31,0.49,0.8,1.09,0.49,0.33,1,1.01,0.55,0.46,0.72,0.5,0.3,1.02,0.55,0.9,1,0.7,2.02,1.29,0.73,1.51,0.31,1.53,1.52,0.71,1,0.51,0.7,1.2,0.91,0.51,1.29,1.01],"y":[4921,1332,2195,1040,2789,5386,5373,709,540,1879,733,2410,16580,5578,1901,1147,2021,2278,2054,4967,6097,7000,2863,4062,3665,9607,4969,626,876,4389,1219,4936,15695,3282,11159,2329,17715,747,1016,3950,827,827,7644,2351,4760,2379,5439,7153,6397,2010,4575,8654,3924,810,3931,11869,931,4989,9314,3893,2904,11795,3214,774,1639,855,6132,1389,5775,982,589,10767,7971,11102,3869,7291,591,803,4830,689,5327,505,18306,5789,3322,5096,2196,4844,1698,827,4165,4916,5220,13970,4864,2726,1332,2167,3624,524,1332,700,4480,1438,1340,4368,1250,801,8110,601,2001,16629,4739,3270,6460,1016,1662,5292,3961,589,3345,3750,1397,15913,5226,11666,8095,526,9069,4133,11522,2964,765,1321,12009,4390,1344,1214,4721,2107,574,10830,422,571,447,12862,4621,4455,507,4884,589,554,770,5204,11883,4805,4788,3506,2113,5179,1593,3209,1315,948,5218,2793,743,2962,3265,1389,1927,1698,744,3841,5821,4731,4304,4476,475,2871,3808,1292,663,6620,1354,2913,2753,5584,5085,807,1337,651,965,2610,1682,770,2212,5537,7218,1692,5807,4784,2613,4385,609,855,12288,1605,5576,558,1072,2699,5570,1116,579,5292,3832,1609,807,2831,1617,552,4718,1263,3734,4586,2496,16560,6140,2321,10085,544,11406,7559,2649,5197,1284,2679,5226,3323,1394,6588,5854],"text":["clarity: SI1<br />carat: 0.90<br />price:  4921","clarity: SI1<br />carat: 0.50<br />price:  1332","clarity: SI1<br />carat: 0.83<br />price:  2195","clarity: SI1<br />carat: 0.44<br />price:  1040","clarity: SI1<br />carat: 0.76<br />price:  2789","clarity: SI1<br />carat: 1.01<br />price:  5386","clarity: SI1<br />carat: 0.90<br />price:  5373","clarity: SI1<br />carat: 0.30<br />price:   709","clarity: SI1<br />carat: 0.30<br />price:   540","clarity: SI1<br />carat: 0.72<br />price:  1879","clarity: SI1<br />carat: 0.38<br />price:   733","clarity: SI1<br />carat: 0.70<br />price:  2410","clarity: SI1<br />carat: 2.00<br />price: 16580","clarity: SI1<br />carat: 1.20<br />price:  5578","clarity: SI1<br />carat: 0.66<br />price:  1901","clarity: SI1<br />carat: 0.52<br />price:  1147","clarity: SI1<br />carat: 0.53<br />price:  2021","clarity: SI1<br />carat: 0.70<br />price:  2278","clarity: SI1<br />carat: 0.70<br />price:  2054","clarity: SI1<br />carat: 1.28<br />price:  4967","clarity: SI1<br />carat: 1.01<br />price:  6097","clarity: SI1<br />carat: 1.24<br />price:  7000","clarity: SI1<br />carat: 0.71<br />price:  2863","clarity: SI1<br />carat: 0.90<br />price:  4062","clarity: SI1<br />carat: 1.01<br />price:  3665","clarity: SI1<br />carat: 1.73<br />price:  9607","clarity: SI1<br />carat: 1.01<br />price:  4969","clarity: SI1<br />carat: 0.34<br />price:   626","clarity: SI1<br />carat: 0.41<br />price:   876","clarity: SI1<br />carat: 1.00<br />price:  4389","clarity: SI1<br />carat: 0.53<br />price:  1219","clarity: SI1<br />carat: 1.00<br />price:  4936","clarity: SI1<br />carat: 2.02<br />price: 15695","clarity: SI1<br />carat: 0.90<br />price:  3282","clarity: SI1<br />carat: 1.64<br />price: 11159","clarity: SI1<br />carat: 0.71<br />price:  2329","clarity: SI1<br />carat: 2.31<br />price: 17715","clarity: SI1<br />carat: 0.37<br />price:   747","clarity: SI1<br />carat: 0.43<br />price:  1016","clarity: SI1<br />carat: 0.90<br />price:  3950","clarity: SI1<br />carat: 0.35<br />price:   827","clarity: SI1<br />carat: 0.35<br />price:   827","clarity: SI1<br />carat: 1.40<br />price:  7644","clarity: SI1<br />carat: 0.72<br />price:  2351","clarity: SI1<br />carat: 0.90<br />price:  4760","clarity: SI1<br />carat: 0.87<br />price:  2379","clarity: SI1<br />carat: 1.11<br />price:  5439","clarity: SI1<br />carat: 1.12<br />price:  7153","clarity: SI1<br />carat: 1.21<br />price:  6397","clarity: SI1<br />carat: 0.70<br />price:  2010","clarity: SI1<br />carat: 0.94<br />price:  4575","clarity: SI1<br />carat: 1.43<br />price:  8654","clarity: SI1<br />carat: 0.91<br />price:  3924","clarity: SI1<br />carat: 0.36<br />price:   810","clarity: SI1<br />carat: 0.90<br />price:  3931","clarity: SI1<br />carat: 1.70<br />price: 11869","clarity: SI1<br />carat: 0.42<br />price:   931","clarity: SI1<br />carat: 1.26<br />price:  4989","clarity: SI1<br />carat: 1.54<br />price:  9314","clarity: SI1<br />carat: 0.91<br />price:  3893","clarity: SI1<br />carat: 0.79<br />price:  2904","clarity: SI1<br />carat: 1.50<br />price: 11795","clarity: SI1<br />carat: 0.78<br />price:  3214","clarity: SI1<br />carat: 0.43<br />price:   774","clarity: SI1<br />carat: 0.53<br />price:  1639","clarity: SI1<br />carat: 0.38<br />price:   855","clarity: SI1<br />carat: 1.16<br />price:  6132","clarity: SI1<br />carat: 0.52<br />price:  1389","clarity: SI1<br />carat: 1.00<br />price:  5775","clarity: SI1<br />carat: 0.50<br />price:   982","clarity: SI1<br />carat: 0.32<br />price:   589","clarity: SI1<br />carat: 1.52<br />price: 10767","clarity: SI1<br />carat: 1.53<br />price:  7971","clarity: SI1<br />carat: 1.51<br />price: 11102","clarity: SI1<br />carat: 1.01<br />price:  3869","clarity: SI1<br />carat: 1.24<br />price:  7291","clarity: SI1<br />carat: 0.32<br />price:   591","clarity: SI1<br />carat: 0.34<br />price:   803","clarity: SI1<br />carat: 1.00<br />price:  4830","clarity: SI1<br />carat: 0.40<br />price:   689","clarity: SI1<br />carat: 1.08<br />price:  5327","clarity: SI1<br />carat: 0.36<br />price:   505","clarity: SI1<br />carat: 1.93<br />price: 18306","clarity: SI1<br />carat: 1.01<br />price:  5789","clarity: SI1<br />carat: 0.83<br />price:  3322","clarity: SI1<br />carat: 1.00<br />price:  5096","clarity: SI1<br />carat: 0.70<br />price:  2196","clarity: SI1<br />carat: 1.00<br />price:  4844","clarity: SI1<br />carat: 0.55<br />price:  1698","clarity: SI1<br />carat: 0.35<br />price:   827","clarity: SI1<br />carat: 0.90<br />price:  4165","clarity: SI1<br />carat: 1.24<br />price:  4916","clarity: SI1<br />carat: 1.04<br />price:  5220","clarity: SI1<br />carat: 1.71<br />price: 13970","clarity: SI1<br />carat: 1.00<br />price:  4864","clarity: SI1<br />carat: 0.70<br />price:  2726","clarity: SI1<br />carat: 0.58<br />price:  1332","clarity: SI1<br />carat: 0.70<br />price:  2167","clarity: SI1<br />carat: 0.92<br />price:  3624","clarity: SI1<br />carat: 0.30<br />price:   524","clarity: SI1<br />carat: 0.53<br />price:  1332","clarity: SI1<br />carat: 0.38<br />price:   700","clarity: SI1<br />carat: 0.96<br />price:  4480","clarity: SI1<br />carat: 0.51<br />price:  1438","clarity: SI1<br />carat: 0.51<br />price:  1340","clarity: SI1<br />carat: 1.20<br />price:  4368","clarity: SI1<br />carat: 0.50<br />price:  1250","clarity: SI1<br />carat: 0.36<br />price:   801","clarity: SI1<br />carat: 1.26<br />price:  8110","clarity: SI1<br />carat: 0.31<br />price:   601","clarity: SI1<br />carat: 0.71<br />price:  2001","clarity: SI1<br />carat: 2.03<br />price: 16629","clarity: SI1<br />carat: 0.93<br />price:  4739","clarity: SI1<br />carat: 0.81<br />price:  3270","clarity: SI1<br />carat: 1.03<br />price:  6460","clarity: SI1<br />carat: 0.43<br />price:  1016","clarity: SI1<br />carat: 0.54<br />price:  1662","clarity: SI1<br />carat: 1.00<br />price:  5292","clarity: SI1<br />carat: 0.91<br />price:  3961","clarity: SI1<br />carat: 0.32<br />price:   589","clarity: SI1<br />carat: 0.77<br />price:  3345","clarity: SI1<br />carat: 0.93<br />price:  3750","clarity: SI1<br />carat: 0.57<br />price:  1397","clarity: SI1<br />carat: 2.14<br />price: 15913","clarity: SI1<br />carat: 1.01<br />price:  5226","clarity: SI1<br />carat: 1.51<br />price: 11666","clarity: SI1<br />carat: 1.53<br />price:  8095","clarity: SI1<br />carat: 0.30<br />price:   526","clarity: SI1<br />carat: 1.51<br />price:  9069","clarity: SI1<br />carat: 1.00<br />price:  4133","clarity: SI1<br />carat: 1.56<br />price: 11522","clarity: SI1<br />carat: 0.75<br />price:  2964","clarity: SI1<br />carat: 0.40<br />price:   765","clarity: SI1<br />carat: 0.55<br />price:  1321","clarity: SI1<br />carat: 1.50<br />price: 12009","clarity: SI1<br />carat: 1.10<br />price:  4390","clarity: SI1<br />carat: 0.52<br />price:  1344","clarity: SI1<br />carat: 0.65<br />price:  1214","clarity: SI1<br />carat: 0.97<br />price:  4721","clarity: SI1<br />carat: 0.70<br />price:  2107","clarity: SI1<br />carat: 0.30<br />price:   574","clarity: SI1<br />carat: 1.53<br />price: 10830","clarity: SI1<br />carat: 0.30<br />price:   422","clarity: SI1<br />carat: 0.36<br />price:   571","clarity: SI1<br />carat: 0.30<br />price:   447","clarity: SI1<br />carat: 2.03<br />price: 12862","clarity: SI1<br />carat: 0.92<br />price:  4621","clarity: SI1<br />carat: 1.02<br />price:  4455","clarity: SI1<br />carat: 0.34<br />price:   507","clarity: SI1<br />carat: 1.02<br />price:  4884","clarity: SI1<br />carat: 0.32<br />price:   589","clarity: SI1<br />carat: 0.30<br />price:   554","clarity: SI1<br />carat: 0.36<br />price:   770","clarity: SI1<br />carat: 1.01<br />price:  5204","clarity: SI1<br />carat: 1.83<br />price: 11883","clarity: SI1<br />carat: 1.00<br />price:  4805","clarity: SI1<br />carat: 1.00<br />price:  4788","clarity: SI1<br />carat: 0.83<br />price:  3506","clarity: SI1<br />carat: 0.70<br />price:  2113","clarity: SI1<br />carat: 1.13<br />price:  5179","clarity: SI1<br />carat: 0.50<br />price:  1593","clarity: SI1<br />carat: 0.79<br />price:  3209","clarity: SI1<br />carat: 0.51<br />price:  1315","clarity: SI1<br />carat: 0.43<br />price:   948","clarity: SI1<br />carat: 1.21<br />price:  5218","clarity: SI1<br />carat: 0.79<br />price:  2793","clarity: SI1<br />carat: 0.33<br />price:   743","clarity: SI1<br />carat: 0.82<br />price:  2962","clarity: SI1<br />carat: 0.84<br />price:  3265","clarity: SI1<br />carat: 0.52<br />price:  1389","clarity: SI1<br />carat: 0.61<br />price:  1927","clarity: SI1<br />carat: 0.56<br />price:  1698","clarity: SI1<br />carat: 0.41<br />price:   744","clarity: SI1<br />carat: 0.90<br />price:  3841","clarity: SI1<br />carat: 1.05<br />price:  5821","clarity: SI1<br />carat: 0.91<br />price:  4731","clarity: SI1<br />carat: 0.90<br />price:  4304","clarity: SI1<br />carat: 1.08<br />price:  4476","clarity: SI1<br />carat: 0.30<br />price:   475","clarity: SI1<br />carat: 0.79<br />price:  2871","clarity: SI1<br />carat: 1.00<br />price:  3808","clarity: SI1<br />carat: 0.54<br />price:  1292","clarity: SI1<br />carat: 0.36<br />price:   663","clarity: SI1<br />carat: 1.21<br />price:  6620","clarity: SI1<br />carat: 0.50<br />price:  1354","clarity: SI1<br />carat: 0.71<br />price:  2913","clarity: SI1<br />carat: 0.70<br />price:  2753","clarity: SI1<br />carat: 1.13<br />price:  5584","clarity: SI1<br />carat: 1.01<br />price:  5085","clarity: SI1<br />carat: 0.43<br />price:   807","clarity: SI1<br />carat: 0.50<br />price:  1337","clarity: SI1<br />carat: 0.31<br />price:   651","clarity: SI1<br />carat: 0.55<br />price:   965","clarity: SI1<br />carat: 0.72<br />price:  2610","clarity: SI1<br />carat: 0.52<br />price:  1682","clarity: SI1<br />carat: 0.40<br />price:   770","clarity: SI1<br />carat: 0.72<br />price:  2212","clarity: SI1<br />carat: 1.07<br />price:  5537","clarity: SI1<br />carat: 1.36<br />price:  7218","clarity: SI1<br />carat: 0.55<br />price:  1692","clarity: SI1<br />carat: 1.22<br />price:  5807","clarity: SI1<br />carat: 1.09<br />price:  4784","clarity: SI1<br />carat: 0.83<br />price:  2613","clarity: SI1<br />carat: 0.90<br />price:  4385","clarity: SI1<br />carat: 0.30<br />price:   609","clarity: SI1<br />carat: 0.40<br />price:   855","clarity: SI1<br />carat: 1.76<br />price: 12288","clarity: SI1<br />carat: 0.52<br />price:  1605","clarity: SI1<br />carat: 1.01<br />price:  5576","clarity: SI1<br />carat: 0.31<br />price:   558","clarity: SI1<br />carat: 0.49<br />price:  1072","clarity: SI1<br />carat: 0.80<br />price:  2699","clarity: SI1<br />carat: 1.09<br />price:  5570","clarity: SI1<br />carat: 0.49<br />price:  1116","clarity: SI1<br />carat: 0.33<br />price:   579","clarity: SI1<br />carat: 1.00<br />price:  5292","clarity: SI1<br />carat: 1.01<br />price:  3832","clarity: SI1<br />carat: 0.55<br />price:  1609","clarity: SI1<br />carat: 0.46<br />price:   807","clarity: SI1<br />carat: 0.72<br />price:  2831","clarity: SI1<br />carat: 0.50<br />price:  1617","clarity: SI1<br />carat: 0.30<br />price:   552","clarity: SI1<br />carat: 1.02<br />price:  4718","clarity: SI1<br />carat: 0.55<br />price:  1263","clarity: SI1<br />carat: 0.90<br />price:  3734","clarity: SI1<br />carat: 1.00<br />price:  4586","clarity: SI1<br />carat: 0.70<br />price:  2496","clarity: SI1<br />carat: 2.02<br />price: 16560","clarity: SI1<br />carat: 1.29<br />price:  6140","clarity: SI1<br />carat: 0.73<br />price:  2321","clarity: SI1<br />carat: 1.51<br />price: 10085","clarity: SI1<br />carat: 0.31<br />price:   544","clarity: SI1<br />carat: 1.53<br />price: 11406","clarity: SI1<br />carat: 1.52<br />price:  7559","clarity: SI1<br />carat: 0.71<br />price:  2649","clarity: SI1<br />carat: 1.00<br />price:  5197","clarity: SI1<br />carat: 0.51<br />price:  1284","clarity: SI1<br />carat: 0.70<br />price:  2679","clarity: SI1<br />carat: 1.20<br />price:  5226","clarity: SI1<br />carat: 0.91<br />price:  3323","clarity: SI1<br />carat: 0.51<br />price:  1394","clarity: SI1<br />carat: 1.29<br />price:  6588","clarity: SI1<br />carat: 1.01<br />price:  5854"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(199,233,192,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(199,233,192,1)"}},"hoveron":"points","name":"SI1","legendgroup":"SI1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1.14,0.71,1.01,0.52,0.31,0.31,0.41,0.3,0.71,0.7,0.31,0.4,0.5,0.32,1.01,0.36,1.02,0.33,1.23,0.45,1.1,1.04,0.51,0.41,2.2,1.37,1.21,1.25,1.14,0.53,1.07,0.67,0.46,0.54,1.12,1.21,0.42,0.9,0.72,0.2,0.41,0.75,0.56,0.31,0.51,2.01,1.01,0.71,0.74,0.7,2.12,2.2,0.7,0.82,0.33,0.3,0.37,0.35,2.08,0.36,1.68,0.39,0.31,1.08,1.13,0.54,0.51,0.25,0.3,1.16,0.56,1.01,0.41,0.54,1.13,0.4,0.9,0.32,0.84,0.51,1.2,0.3,0.3,1.62,0.59,0.3,0.41,0.31,1,0.31,1.7,0.51,0.3,1.51,0.31,0.56,0.4,0.31,0.44,0.73,0.3,0.41,0.54,0.91,0.54,0.3,0.71,0.41,0.32,1.5,0.36,0.5,0.7,0.31,2.29,1.34,0.33,1.08,1.35,0.35,0.9,1.7,1.09,0.33,0.59,0.31,0.33,0.32,1.01,1,0.78,2,1.06,1.16,0.4,0.4,0.75,1.66,0.63,1.07,0.65,0.32,0.31,0.73,1.31,0.35,0.7,0.33,0.53,0.32,1.29,1.37,1.02,0.32,0.51,1.51,1.07,0.51,0.32,0.33,1.14,1.6,0.54,1.19,0.38,0.41,0.27,1.1,0.76,0.72,0.52,0.79,0.37,1.2,0.67,1.31,0.39,0.57,1.28,0.36,0.31,0.4,0.32,1.52,1.33,1.06,0.31,0.91,0.39,0.36,0.26,1.5,0.83,0.31,0.3,0.3,1.14,1.01,1.01,1.24,0.33,0.41,0.7,1.74,0.4,0.5,0.34,1.53,0.53,0.72,0.33,1.28,0.51,0.39,0.3,0.27,0.72,0.58,0.56,0.4,1.51,0.74,0.34,1.41,0.32,0.32,0.27,1.2,0.54,1.33,0.32,0.31,1.14,0.64,0.41],"y":[4906,2780,6666,1694,680,680,951,491,3321,2400,942,791,1569,645,6289,587,6397,743,8233,980,4962,5416,1793,900,17905,7951,6887,5396,6095,1659,5820,1708,1302,1847,6774,8691,847,4157,3601,367,1061,3192,1580,489,1781,15729,6335,2682,2327,2956,17254,17460,2218,4628,854,911,603,923,18447,556,15309,1040,680,7548,5885,1637,1882,535,911,8038,1698,6714,999,1786,6379,975,3398,561,3535,984,5645,911,612,13702,1705,844,1061,802,4155,452,9586,1781,911,6936,544,1662,926,544,1040,2756,491,809,1892,2854,1259,778,3020,863,842,14092,789,1407,2981,558,18653,9233,594,6415,8062,446,3989,18176,5783,928,2145,802,1002,720,6666,5623,3531,14889,7280,4323,1050,727,3718,16294,1821,5820,1970,720,489,2756,6917,706,2250,723,1612,393,6099,7500,5432,561,1656,15821,8640,1787,561,666,6500,10346,1605,7130,721,935,419,4537,2551,2311,1151,2451,833,8829,1990,6822,787,2096,5319,568,625,850,645,13768,5251,7079,627,4199,1024,852,453,10291,4417,544,911,844,7409,5864,5919,7660,668,784,2793,16316,982,1047,536,7418,1857,2949,1002,6451,1179,970,710,599,3238,1984,1755,791,14165,3178,765,9254,645,612,534,8414,1892,5913,972,942,6095,1831,827],"text":["clarity: VS2<br />carat: 1.14<br />price:  4906","clarity: VS2<br />carat: 0.71<br />price:  2780","clarity: VS2<br />carat: 1.01<br />price:  6666","clarity: VS2<br />carat: 0.52<br />price:  1694","clarity: VS2<br />carat: 0.31<br />price:   680","clarity: VS2<br />carat: 0.31<br />price:   680","clarity: VS2<br />carat: 0.41<br />price:   951","clarity: VS2<br />carat: 0.30<br />price:   491","clarity: VS2<br />carat: 0.71<br />price:  3321","clarity: VS2<br />carat: 0.70<br />price:  2400","clarity: VS2<br />carat: 0.31<br />price:   942","clarity: VS2<br />carat: 0.40<br />price:   791","clarity: VS2<br />carat: 0.50<br />price:  1569","clarity: VS2<br />carat: 0.32<br />price:   645","clarity: VS2<br />carat: 1.01<br />price:  6289","clarity: VS2<br />carat: 0.36<br />price:   587","clarity: VS2<br />carat: 1.02<br />price:  6397","clarity: VS2<br />carat: 0.33<br />price:   743","clarity: VS2<br />carat: 1.23<br />price:  8233","clarity: VS2<br />carat: 0.45<br />price:   980","clarity: VS2<br />carat: 1.10<br />price:  4962","clarity: VS2<br />carat: 1.04<br />price:  5416","clarity: VS2<br />carat: 0.51<br />price:  1793","clarity: VS2<br />carat: 0.41<br />price:   900","clarity: VS2<br />carat: 2.20<br />price: 17905","clarity: VS2<br />carat: 1.37<br />price:  7951","clarity: VS2<br />carat: 1.21<br />price:  6887","clarity: VS2<br />carat: 1.25<br />price:  5396","clarity: VS2<br />carat: 1.14<br />price:  6095","clarity: VS2<br />carat: 0.53<br />price:  1659","clarity: VS2<br />carat: 1.07<br />price:  5820","clarity: VS2<br />carat: 0.67<br />price:  1708","clarity: VS2<br />carat: 0.46<br />price:  1302","clarity: VS2<br />carat: 0.54<br />price:  1847","clarity: VS2<br />carat: 1.12<br />price:  6774","clarity: VS2<br />carat: 1.21<br />price:  8691","clarity: VS2<br />carat: 0.42<br />price:   847","clarity: VS2<br />carat: 0.90<br />price:  4157","clarity: VS2<br />carat: 0.72<br />price:  3601","clarity: VS2<br />carat: 0.20<br />price:   367","clarity: VS2<br />carat: 0.41<br />price:  1061","clarity: VS2<br />carat: 0.75<br />price:  3192","clarity: VS2<br />carat: 0.56<br />price:  1580","clarity: VS2<br />carat: 0.31<br />price:   489","clarity: VS2<br />carat: 0.51<br />price:  1781","clarity: VS2<br />carat: 2.01<br />price: 15729","clarity: VS2<br />carat: 1.01<br />price:  6335","clarity: VS2<br />carat: 0.71<br />price:  2682","clarity: VS2<br />carat: 0.74<br />price:  2327","clarity: VS2<br />carat: 0.70<br />price:  2956","clarity: VS2<br />carat: 2.12<br />price: 17254","clarity: VS2<br />carat: 2.20<br />price: 17460","clarity: VS2<br />carat: 0.70<br />price:  2218","clarity: VS2<br />carat: 0.82<br />price:  4628","clarity: VS2<br />carat: 0.33<br />price:   854","clarity: VS2<br />carat: 0.30<br />price:   911","clarity: VS2<br />carat: 0.37<br />price:   603","clarity: VS2<br />carat: 0.35<br />price:   923","clarity: VS2<br />carat: 2.08<br />price: 18447","clarity: VS2<br />carat: 0.36<br />price:   556","clarity: VS2<br />carat: 1.68<br />price: 15309","clarity: VS2<br />carat: 0.39<br />price:  1040","clarity: VS2<br />carat: 0.31<br />price:   680","clarity: VS2<br />carat: 1.08<br />price:  7548","clarity: VS2<br />carat: 1.13<br />price:  5885","clarity: VS2<br />carat: 0.54<br />price:  1637","clarity: VS2<br />carat: 0.51<br />price:  1882","clarity: VS2<br />carat: 0.25<br />price:   535","clarity: VS2<br />carat: 0.30<br />price:   911","clarity: VS2<br />carat: 1.16<br />price:  8038","clarity: VS2<br />carat: 0.56<br />price:  1698","clarity: VS2<br />carat: 1.01<br />price:  6714","clarity: VS2<br />carat: 0.41<br />price:   999","clarity: VS2<br />carat: 0.54<br />price:  1786","clarity: VS2<br />carat: 1.13<br />price:  6379","clarity: VS2<br />carat: 0.40<br />price:   975","clarity: VS2<br />carat: 0.90<br />price:  3398","clarity: VS2<br />carat: 0.32<br />price:   561","clarity: VS2<br />carat: 0.84<br />price:  3535","clarity: VS2<br />carat: 0.51<br />price:   984","clarity: VS2<br />carat: 1.20<br />price:  5645","clarity: VS2<br />carat: 0.30<br />price:   911","clarity: VS2<br />carat: 0.30<br />price:   612","clarity: VS2<br />carat: 1.62<br />price: 13702","clarity: VS2<br />carat: 0.59<br />price:  1705","clarity: VS2<br />carat: 0.30<br />price:   844","clarity: VS2<br />carat: 0.41<br />price:  1061","clarity: VS2<br />carat: 0.31<br />price:   802","clarity: VS2<br />carat: 1.00<br />price:  4155","clarity: VS2<br />carat: 0.31<br />price:   452","clarity: VS2<br />carat: 1.70<br />price:  9586","clarity: VS2<br />carat: 0.51<br />price:  1781","clarity: VS2<br />carat: 0.30<br />price:   911","clarity: VS2<br />carat: 1.51<br />price:  6936","clarity: VS2<br />carat: 0.31<br />price:   544","clarity: VS2<br />carat: 0.56<br />price:  1662","clarity: VS2<br />carat: 0.40<br />price:   926","clarity: VS2<br />carat: 0.31<br />price:   544","clarity: VS2<br />carat: 0.44<br />price:  1040","clarity: VS2<br />carat: 0.73<br />price:  2756","clarity: VS2<br />carat: 0.30<br />price:   491","clarity: VS2<br />carat: 0.41<br />price:   809","clarity: VS2<br />carat: 0.54<br />price:  1892","clarity: VS2<br />carat: 0.91<br />price:  2854","clarity: VS2<br />carat: 0.54<br />price:  1259","clarity: VS2<br />carat: 0.30<br />price:   778","clarity: VS2<br />carat: 0.71<br />price:  3020","clarity: VS2<br />carat: 0.41<br />price:   863","clarity: VS2<br />carat: 0.32<br />price:   842","clarity: VS2<br />carat: 1.50<br />price: 14092","clarity: VS2<br />carat: 0.36<br />price:   789","clarity: VS2<br />carat: 0.50<br />price:  1407","clarity: VS2<br />carat: 0.70<br />price:  2981","clarity: VS2<br />carat: 0.31<br />price:   558","clarity: VS2<br />carat: 2.29<br />price: 18653","clarity: VS2<br />carat: 1.34<br />price:  9233","clarity: VS2<br />carat: 0.33<br />price:   594","clarity: VS2<br />carat: 1.08<br />price:  6415","clarity: VS2<br />carat: 1.35<br />price:  8062","clarity: VS2<br />carat: 0.35<br />price:   446","clarity: VS2<br />carat: 0.90<br />price:  3989","clarity: VS2<br />carat: 1.70<br />price: 18176","clarity: VS2<br />carat: 1.09<br />price:  5783","clarity: VS2<br />carat: 0.33<br />price:   928","clarity: VS2<br />carat: 0.59<br />price:  2145","clarity: VS2<br />carat: 0.31<br />price:   802","clarity: VS2<br />carat: 0.33<br />price:  1002","clarity: VS2<br />carat: 0.32<br />price:   720","clarity: VS2<br />carat: 1.01<br />price:  6666","clarity: VS2<br />carat: 1.00<br />price:  5623","clarity: VS2<br />carat: 0.78<br />price:  3531","clarity: VS2<br />carat: 2.00<br />price: 14889","clarity: VS2<br />carat: 1.06<br />price:  7280","clarity: VS2<br />carat: 1.16<br />price:  4323","clarity: VS2<br />carat: 0.40<br />price:  1050","clarity: VS2<br />carat: 0.40<br />price:   727","clarity: VS2<br />carat: 0.75<br />price:  3718","clarity: VS2<br />carat: 1.66<br />price: 16294","clarity: VS2<br />carat: 0.63<br />price:  1821","clarity: VS2<br />carat: 1.07<br />price:  5820","clarity: VS2<br />carat: 0.65<br />price:  1970","clarity: VS2<br />carat: 0.32<br />price:   720","clarity: VS2<br />carat: 0.31<br />price:   489","clarity: VS2<br />carat: 0.73<br />price:  2756","clarity: VS2<br />carat: 1.31<br />price:  6917","clarity: VS2<br />carat: 0.35<br />price:   706","clarity: VS2<br />carat: 0.70<br />price:  2250","clarity: VS2<br />carat: 0.33<br />price:   723","clarity: VS2<br />carat: 0.53<br />price:  1612","clarity: VS2<br />carat: 0.32<br />price:   393","clarity: VS2<br />carat: 1.29<br />price:  6099","clarity: VS2<br />carat: 1.37<br />price:  7500","clarity: VS2<br />carat: 1.02<br />price:  5432","clarity: VS2<br />carat: 0.32<br />price:   561","clarity: VS2<br />carat: 0.51<br />price:  1656","clarity: VS2<br />carat: 1.51<br />price: 15821","clarity: VS2<br />carat: 1.07<br />price:  8640","clarity: VS2<br />carat: 0.51<br />price:  1787","clarity: VS2<br />carat: 0.32<br />price:   561","clarity: VS2<br />carat: 0.33<br />price:   666","clarity: VS2<br />carat: 1.14<br />price:  6500","clarity: VS2<br />carat: 1.60<br />price: 10346","clarity: VS2<br />carat: 0.54<br />price:  1605","clarity: VS2<br />carat: 1.19<br />price:  7130","clarity: VS2<br />carat: 0.38<br />price:   721","clarity: VS2<br />carat: 0.41<br />price:   935","clarity: VS2<br />carat: 0.27<br />price:   419","clarity: VS2<br />carat: 1.10<br />price:  4537","clarity: VS2<br />carat: 0.76<br />price:  2551","clarity: VS2<br />carat: 0.72<br />price:  2311","clarity: VS2<br />carat: 0.52<br />price:  1151","clarity: VS2<br />carat: 0.79<br />price:  2451","clarity: VS2<br />carat: 0.37<br />price:   833","clarity: VS2<br />carat: 1.20<br />price:  8829","clarity: VS2<br />carat: 0.67<br />price:  1990","clarity: VS2<br />carat: 1.31<br />price:  6822","clarity: VS2<br />carat: 0.39<br />price:   787","clarity: VS2<br />carat: 0.57<br />price:  2096","clarity: VS2<br />carat: 1.28<br />price:  5319","clarity: VS2<br />carat: 0.36<br />price:   568","clarity: VS2<br />carat: 0.31<br />price:   625","clarity: VS2<br />carat: 0.40<br />price:   850","clarity: VS2<br />carat: 0.32<br />price:   645","clarity: VS2<br />carat: 1.52<br />price: 13768","clarity: VS2<br />carat: 1.33<br />price:  5251","clarity: VS2<br />carat: 1.06<br />price:  7079","clarity: VS2<br />carat: 0.31<br />price:   627","clarity: VS2<br />carat: 0.91<br />price:  4199","clarity: VS2<br />carat: 0.39<br />price:  1024","clarity: VS2<br />carat: 0.36<br />price:   852","clarity: VS2<br />carat: 0.26<br />price:   453","clarity: VS2<br />carat: 1.50<br />price: 10291","clarity: VS2<br />carat: 0.83<br />price:  4417","clarity: VS2<br />carat: 0.31<br />price:   544","clarity: VS2<br />carat: 0.30<br />price:   911","clarity: VS2<br />carat: 0.30<br />price:   844","clarity: VS2<br />carat: 1.14<br />price:  7409","clarity: VS2<br />carat: 1.01<br />price:  5864","clarity: VS2<br />carat: 1.01<br />price:  5919","clarity: VS2<br />carat: 1.24<br />price:  7660","clarity: VS2<br />carat: 0.33<br />price:   668","clarity: VS2<br />carat: 0.41<br />price:   784","clarity: VS2<br />carat: 0.70<br />price:  2793","clarity: VS2<br />carat: 1.74<br />price: 16316","clarity: VS2<br />carat: 0.40<br />price:   982","clarity: VS2<br />carat: 0.50<br />price:  1047","clarity: VS2<br />carat: 0.34<br />price:   536","clarity: VS2<br />carat: 1.53<br />price:  7418","clarity: VS2<br />carat: 0.53<br />price:  1857","clarity: VS2<br />carat: 0.72<br />price:  2949","clarity: VS2<br />carat: 0.33<br />price:  1002","clarity: VS2<br />carat: 1.28<br />price:  6451","clarity: VS2<br />carat: 0.51<br />price:  1179","clarity: VS2<br />carat: 0.39<br />price:   970","clarity: VS2<br />carat: 0.30<br />price:   710","clarity: VS2<br />carat: 0.27<br />price:   599","clarity: VS2<br />carat: 0.72<br />price:  3238","clarity: VS2<br />carat: 0.58<br />price:  1984","clarity: VS2<br />carat: 0.56<br />price:  1755","clarity: VS2<br />carat: 0.40<br />price:   791","clarity: VS2<br />carat: 1.51<br />price: 14165","clarity: VS2<br />carat: 0.74<br />price:  3178","clarity: VS2<br />carat: 0.34<br />price:   765","clarity: VS2<br />carat: 1.41<br />price:  9254","clarity: VS2<br />carat: 0.32<br />price:   645","clarity: VS2<br />carat: 0.32<br />price:   612","clarity: VS2<br />carat: 0.27<br />price:   534","clarity: VS2<br />carat: 1.20<br />price:  8414","clarity: VS2<br />carat: 0.54<br />price:  1892","clarity: VS2<br />carat: 1.33<br />price:  5913","clarity: VS2<br />carat: 0.32<br />price:   972","clarity: VS2<br />carat: 0.31<br />price:   942","clarity: VS2<br />carat: 1.14<br />price:  6095","clarity: VS2<br />carat: 0.64<br />price:  1831","clarity: VS2<br />carat: 0.41<br />price:   827"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(161,217,155,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(161,217,155,1)"}},"hoveron":"points","name":"VS2","legendgroup":"VS2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1.29,1.39,0.32,0.53,0.7,0.56,0.42,0.31,1.17,0.31,0.31,0.32,1,0.54,0.77,0.71,0.55,1.06,0.8,0.33,0.33,1,0.27,1.21,0.36,0.3,0.9,0.33,0.61,0.85,0.31,0.53,0.42,0.79,1.31,0.73,1.33,0.73,0.52,0.73,0.51,1,0.35,0.54,0.41,1.14,1.21,0.74,0.31,0.3,0.3,1,0.71,0.38,0.9,1.01,0.62,0.37,0.3,1.41,0.25,0.7,0.39,2.01,0.36,0.4,0.32,0.3,0.32,0.42,0.34,0.33,0.7,1.05,0.3,0.5,0.61,0.33,0.53,0.3,1.03,0.52,1.06,2.59,0.9,0.34,1.22,0.39,0.6,1.71,1.24,1.58,0.33,1,0.3,0.5,1.19,0.31,0.48,0.4,0.4,1.04,0.57,0.31,0.38,0.57,0.3,1.02,0.5,1.02,0.34,1.55,0.3,0.44,1.68,0.77,0.34,0.8,1.3,0.31,0.71,0.43,0.32,1.05,0.3,0.39,0.33,0.3,1.21,0.6,1.34,0.7,1.71,0.32,0.33,0.53,0.24,1.01,0.32,1.01,1.5,0.3,1.34,0.77,0.63,0.42,0.35,0.38,0.56,1.33,0.92,0.41,1,0.53,0.36,0.84,0.31,1.06,1.04,0.58,0.78],"y":[6877,12614,645,2143,2234,1715,1048,698,8648,544,544,828,7367,2083,2005,2889,1634,6663,3273,978,579,8077,470,10685,726,776,2964,727,2485,4189,734,1636,921,2958,10359,3466,6449,3342,1815,2393,1717,6468,706,1600,1153,7171,6973,3389,942,473,473,7056,2368,700,4780,7178,1878,603,507,11009,361,2535,939,17365,726,1035,645,675,561,1087,1033,854,2384,7526,675,1675,2243,521,1844,666,5883,1320,5236,16465,5135,696,8633,876,2094,17197,9405,14624,854,4032,578,1629,9263,802,861,1050,1050,5199,2008,734,703,1949,473,6683,1429,7257,725,14386,675,1238,13445,3350,1109,3296,7333,600,2816,1207,529,3881,605,1024,521,539,6871,1378,6237,2394,10309,1030,854,1393,419,7127,672,6825,13720,670,5748,2682,2188,847,706,778,1585,6442,4328,1153,5619,1721,932,3201,679,8567,4240,2046,3736],"text":["clarity: VS1<br />carat: 1.29<br />price:  6877","clarity: VS1<br />carat: 1.39<br />price: 12614","clarity: VS1<br />carat: 0.32<br />price:   645","clarity: VS1<br />carat: 0.53<br />price:  2143","clarity: VS1<br />carat: 0.70<br />price:  2234","clarity: VS1<br />carat: 0.56<br />price:  1715","clarity: VS1<br />carat: 0.42<br />price:  1048","clarity: VS1<br />carat: 0.31<br />price:   698","clarity: VS1<br />carat: 1.17<br />price:  8648","clarity: VS1<br />carat: 0.31<br />price:   544","clarity: VS1<br />carat: 0.31<br />price:   544","clarity: VS1<br />carat: 0.32<br />price:   828","clarity: VS1<br />carat: 1.00<br />price:  7367","clarity: VS1<br />carat: 0.54<br />price:  2083","clarity: VS1<br />carat: 0.77<br />price:  2005","clarity: VS1<br />carat: 0.71<br />price:  2889","clarity: VS1<br />carat: 0.55<br />price:  1634","clarity: VS1<br />carat: 1.06<br />price:  6663","clarity: VS1<br />carat: 0.80<br />price:  3273","clarity: VS1<br />carat: 0.33<br />price:   978","clarity: VS1<br />carat: 0.33<br />price:   579","clarity: VS1<br />carat: 1.00<br />price:  8077","clarity: VS1<br />carat: 0.27<br />price:   470","clarity: VS1<br />carat: 1.21<br />price: 10685","clarity: VS1<br />carat: 0.36<br />price:   726","clarity: VS1<br />carat: 0.30<br />price:   776","clarity: VS1<br />carat: 0.90<br />price:  2964","clarity: VS1<br />carat: 0.33<br />price:   727","clarity: VS1<br />carat: 0.61<br />price:  2485","clarity: VS1<br />carat: 0.85<br />price:  4189","clarity: VS1<br />carat: 0.31<br />price:   734","clarity: VS1<br />carat: 0.53<br />price:  1636","clarity: VS1<br />carat: 0.42<br />price:   921","clarity: VS1<br />carat: 0.79<br />price:  2958","clarity: VS1<br />carat: 1.31<br />price: 10359","clarity: VS1<br />carat: 0.73<br />price:  3466","clarity: VS1<br />carat: 1.33<br />price:  6449","clarity: VS1<br />carat: 0.73<br />price:  3342","clarity: VS1<br />carat: 0.52<br />price:  1815","clarity: VS1<br />carat: 0.73<br />price:  2393","clarity: VS1<br />carat: 0.51<br />price:  1717","clarity: VS1<br />carat: 1.00<br />price:  6468","clarity: VS1<br />carat: 0.35<br />price:   706","clarity: VS1<br />carat: 0.54<br />price:  1600","clarity: VS1<br />carat: 0.41<br />price:  1153","clarity: VS1<br />carat: 1.14<br />price:  7171","clarity: VS1<br />carat: 1.21<br />price:  6973","clarity: VS1<br />carat: 0.74<br />price:  3389","clarity: VS1<br />carat: 0.31<br />price:   942","clarity: VS1<br />carat: 0.30<br />price:   473","clarity: VS1<br />carat: 0.30<br />price:   473","clarity: VS1<br />carat: 1.00<br />price:  7056","clarity: VS1<br />carat: 0.71<br />price:  2368","clarity: VS1<br />carat: 0.38<br />price:   700","clarity: VS1<br />carat: 0.90<br />price:  4780","clarity: VS1<br />carat: 1.01<br />price:  7178","clarity: VS1<br />carat: 0.62<br />price:  1878","clarity: VS1<br />carat: 0.37<br />price:   603","clarity: VS1<br />carat: 0.30<br />price:   507","clarity: VS1<br />carat: 1.41<br />price: 11009","clarity: VS1<br />carat: 0.25<br />price:   361","clarity: VS1<br />carat: 0.70<br />price:  2535","clarity: VS1<br />carat: 0.39<br />price:   939","clarity: VS1<br />carat: 2.01<br />price: 17365","clarity: VS1<br />carat: 0.36<br />price:   726","clarity: VS1<br />carat: 0.40<br />price:  1035","clarity: VS1<br />carat: 0.32<br />price:   645","clarity: VS1<br />carat: 0.30<br />price:   675","clarity: VS1<br />carat: 0.32<br />price:   561","clarity: VS1<br />carat: 0.42<br />price:  1087","clarity: VS1<br />carat: 0.34<br />price:  1033","clarity: VS1<br />carat: 0.33<br />price:   854","clarity: VS1<br />carat: 0.70<br />price:  2384","clarity: VS1<br />carat: 1.05<br />price:  7526","clarity: VS1<br />carat: 0.30<br />price:   675","clarity: VS1<br />carat: 0.50<br />price:  1675","clarity: VS1<br />carat: 0.61<br />price:  2243","clarity: VS1<br />carat: 0.33<br />price:   521","clarity: VS1<br />carat: 0.53<br />price:  1844","clarity: VS1<br />carat: 0.30<br />price:   666","clarity: VS1<br />carat: 1.03<br />price:  5883","clarity: VS1<br />carat: 0.52<br />price:  1320","clarity: VS1<br />carat: 1.06<br />price:  5236","clarity: VS1<br />carat: 2.59<br />price: 16465","clarity: VS1<br />carat: 0.90<br />price:  5135","clarity: VS1<br />carat: 0.34<br />price:   696","clarity: VS1<br />carat: 1.22<br />price:  8633","clarity: VS1<br />carat: 0.39<br />price:   876","clarity: VS1<br />carat: 0.60<br />price:  2094","clarity: VS1<br />carat: 1.71<br />price: 17197","clarity: VS1<br />carat: 1.24<br />price:  9405","clarity: VS1<br />carat: 1.58<br />price: 14624","clarity: VS1<br />carat: 0.33<br />price:   854","clarity: VS1<br />carat: 1.00<br />price:  4032","clarity: VS1<br />carat: 0.30<br />price:   578","clarity: VS1<br />carat: 0.50<br />price:  1629","clarity: VS1<br />carat: 1.19<br />price:  9263","clarity: VS1<br />carat: 0.31<br />price:   802","clarity: VS1<br />carat: 0.48<br />price:   861","clarity: VS1<br />carat: 0.40<br />price:  1050","clarity: VS1<br />carat: 0.40<br />price:  1050","clarity: VS1<br />carat: 1.04<br />price:  5199","clarity: VS1<br />carat: 0.57<br />price:  2008","clarity: VS1<br />carat: 0.31<br />price:   734","clarity: VS1<br />carat: 0.38<br />price:   703","clarity: VS1<br />carat: 0.57<br />price:  1949","clarity: VS1<br />carat: 0.30<br />price:   473","clarity: VS1<br />carat: 1.02<br />price:  6683","clarity: VS1<br />carat: 0.50<br />price:  1429","clarity: VS1<br />carat: 1.02<br />price:  7257","clarity: VS1<br />carat: 0.34<br />price:   725","clarity: VS1<br />carat: 1.55<br />price: 14386","clarity: VS1<br />carat: 0.30<br />price:   675","clarity: VS1<br />carat: 0.44<br />price:  1238","clarity: VS1<br />carat: 1.68<br />price: 13445","clarity: VS1<br />carat: 0.77<br />price:  3350","clarity: VS1<br />carat: 0.34<br />price:  1109","clarity: VS1<br />carat: 0.80<br />price:  3296","clarity: VS1<br />carat: 1.30<br />price:  7333","clarity: VS1<br />carat: 0.31<br />price:   600","clarity: VS1<br />carat: 0.71<br />price:  2816","clarity: VS1<br />carat: 0.43<br />price:  1207","clarity: VS1<br />carat: 0.32<br />price:   529","clarity: VS1<br />carat: 1.05<br />price:  3881","clarity: VS1<br />carat: 0.30<br />price:   605","clarity: VS1<br />carat: 0.39<br />price:  1024","clarity: VS1<br />carat: 0.33<br />price:   521","clarity: VS1<br />carat: 0.30<br />price:   539","clarity: VS1<br />carat: 1.21<br />price:  6871","clarity: VS1<br />carat: 0.60<br />price:  1378","clarity: VS1<br />carat: 1.34<br />price:  6237","clarity: VS1<br />carat: 0.70<br />price:  2394","clarity: VS1<br />carat: 1.71<br />price: 10309","clarity: VS1<br />carat: 0.32<br />price:  1030","clarity: VS1<br />carat: 0.33<br />price:   854","clarity: VS1<br />carat: 0.53<br />price:  1393","clarity: VS1<br />carat: 0.24<br />price:   419","clarity: VS1<br />carat: 1.01<br />price:  7127","clarity: VS1<br />carat: 0.32<br />price:   672","clarity: VS1<br />carat: 1.01<br />price:  6825","clarity: VS1<br />carat: 1.50<br />price: 13720","clarity: VS1<br />carat: 0.30<br />price:   670","clarity: VS1<br />carat: 1.34<br />price:  5748","clarity: VS1<br />carat: 0.77<br />price:  2682","clarity: VS1<br />carat: 0.63<br />price:  2188","clarity: VS1<br />carat: 0.42<br />price:   847","clarity: VS1<br />carat: 0.35<br />price:   706","clarity: VS1<br />carat: 0.38<br />price:   778","clarity: VS1<br />carat: 0.56<br />price:  1585","clarity: VS1<br />carat: 1.33<br />price:  6442","clarity: VS1<br />carat: 0.92<br />price:  4328","clarity: VS1<br />carat: 0.41<br />price:  1153","clarity: VS1<br />carat: 1.00<br />price:  5619","clarity: VS1<br />carat: 0.53<br />price:  1721","clarity: VS1<br />carat: 0.36<br />price:   932","clarity: VS1<br />carat: 0.84<br />price:  3201","clarity: VS1<br />carat: 0.31<br />price:   679","clarity: VS1<br />carat: 1.06<br />price:  8567","clarity: VS1<br />carat: 1.04<br />price:  4240","clarity: VS1<br />carat: 0.58<br />price:  2046","clarity: VS1<br />carat: 0.78<br />price:  3736"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(116,196,118,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(116,196,118,1)"}},"hoveron":"points","name":"VS1","legendgroup":"VS1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.33,1.4,0.6,1,1.01,1.11,0.34,0.4,0.41,0.3,1.51,0.49,0.9,0.72,0.5,0.31,0.3,1.32,1.23,0.54,0.32,0.3,0.23,0.76,1.36,0.41,0.35,0.31,1.5,0.31,0.37,0.72,0.5,0.71,0.31,1.02,0.36,0.24,0.7,0.32,0.34,0.25,0.6,0.71,0.72,0.47,0.3,0.26,0.28,1.02,0.4,0.47,0.23,0.97,0.3,1.16,0.29,0.7,0.41,0.4,0.24,0.23,1,0.31,0.31,0.4,1.22,0.34,0.4,0.3,0.7,1.06,0.58,0.3,0.51,0.37,1.23,0.3,0.52,0.52,0.91,0.59],"y":[901,8467,2467,4312,8532,9377,1071,905,1105,590,8930,1588,6872,3816,2206,997,605,15802,13034,2502,730,789,530,4150,12494,918,830,707,8732,707,1010,3780,1838,2956,1034,6613,668,336,2487,809,995,476,2350,2448,3417,953,684,599,522,7292,1085,1883,485,6889,581,10850,715,3478,1160,1163,478,505,7163,979,778,972,14414,775,1238,684,2536,13588,2400,945,1895,957,10317,684,2012,1911,5708,2214],"text":["clarity: VVS2<br />carat: 0.33<br />price:   901","clarity: VVS2<br />carat: 1.40<br />price:  8467","clarity: VVS2<br />carat: 0.60<br />price:  2467","clarity: VVS2<br />carat: 1.00<br />price:  4312","clarity: VVS2<br />carat: 1.01<br />price:  8532","clarity: VVS2<br />carat: 1.11<br />price:  9377","clarity: VVS2<br />carat: 0.34<br />price:  1071","clarity: VVS2<br />carat: 0.40<br />price:   905","clarity: VVS2<br />carat: 0.41<br />price:  1105","clarity: VVS2<br />carat: 0.30<br />price:   590","clarity: VVS2<br />carat: 1.51<br />price:  8930","clarity: VVS2<br />carat: 0.49<br />price:  1588","clarity: VVS2<br />carat: 0.90<br />price:  6872","clarity: VVS2<br />carat: 0.72<br />price:  3816","clarity: VVS2<br />carat: 0.50<br />price:  2206","clarity: VVS2<br />carat: 0.31<br />price:   997","clarity: VVS2<br />carat: 0.30<br />price:   605","clarity: VVS2<br />carat: 1.32<br />price: 15802","clarity: VVS2<br />carat: 1.23<br />price: 13034","clarity: VVS2<br />carat: 0.54<br />price:  2502","clarity: VVS2<br />carat: 0.32<br />price:   730","clarity: VVS2<br />carat: 0.30<br />price:   789","clarity: VVS2<br />carat: 0.23<br />price:   530","clarity: VVS2<br />carat: 0.76<br />price:  4150","clarity: VVS2<br />carat: 1.36<br />price: 12494","clarity: VVS2<br />carat: 0.41<br />price:   918","clarity: VVS2<br />carat: 0.35<br />price:   830","clarity: VVS2<br />carat: 0.31<br />price:   707","clarity: VVS2<br />carat: 1.50<br />price:  8732","clarity: VVS2<br />carat: 0.31<br />price:   707","clarity: VVS2<br />carat: 0.37<br />price:  1010","clarity: VVS2<br />carat: 0.72<br />price:  3780","clarity: VVS2<br />carat: 0.50<br />price:  1838","clarity: VVS2<br />carat: 0.71<br />price:  2956","clarity: VVS2<br />carat: 0.31<br />price:  1034","clarity: VVS2<br />carat: 1.02<br />price:  6613","clarity: VVS2<br />carat: 0.36<br />price:   668","clarity: VVS2<br />carat: 0.24<br />price:   336","clarity: VVS2<br />carat: 0.70<br />price:  2487","clarity: VVS2<br />carat: 0.32<br />price:   809","clarity: VVS2<br />carat: 0.34<br />price:   995","clarity: VVS2<br />carat: 0.25<br />price:   476","clarity: VVS2<br />carat: 0.60<br />price:  2350","clarity: VVS2<br />carat: 0.71<br />price:  2448","clarity: VVS2<br />carat: 0.72<br />price:  3417","clarity: VVS2<br />carat: 0.47<br />price:   953","clarity: VVS2<br />carat: 0.30<br />price:   684","clarity: VVS2<br />carat: 0.26<br />price:   599","clarity: VVS2<br />carat: 0.28<br />price:   522","clarity: VVS2<br />carat: 1.02<br />price:  7292","clarity: VVS2<br />carat: 0.40<br />price:  1085","clarity: VVS2<br />carat: 0.47<br />price:  1883","clarity: VVS2<br />carat: 0.23<br />price:   485","clarity: VVS2<br />carat: 0.97<br />price:  6889","clarity: VVS2<br />carat: 0.30<br />price:   581","clarity: VVS2<br />carat: 1.16<br />price: 10850","clarity: VVS2<br />carat: 0.29<br />price:   715","clarity: VVS2<br />carat: 0.70<br />price:  3478","clarity: VVS2<br />carat: 0.41<br />price:  1160","clarity: VVS2<br />carat: 0.40<br />price:  1163","clarity: VVS2<br />carat: 0.24<br />price:   478","clarity: VVS2<br />carat: 0.23<br />price:   505","clarity: VVS2<br />carat: 1.00<br />price:  7163","clarity: VVS2<br />carat: 0.31<br />price:   979","clarity: VVS2<br />carat: 0.31<br />price:   778","clarity: VVS2<br />carat: 0.40<br />price:   972","clarity: VVS2<br />carat: 1.22<br />price: 14414","clarity: VVS2<br />carat: 0.34<br />price:   775","clarity: VVS2<br />carat: 0.40<br />price:  1238","clarity: VVS2<br />carat: 0.30<br />price:   684","clarity: VVS2<br />carat: 0.70<br />price:  2536","clarity: VVS2<br />carat: 1.06<br />price: 13588","clarity: VVS2<br />carat: 0.58<br />price:  2400","clarity: VVS2<br />carat: 0.30<br />price:   945","clarity: VVS2<br />carat: 0.51<br />price:  1895","clarity: VVS2<br />carat: 0.37<br />price:   957","clarity: VVS2<br />carat: 1.23<br />price: 10317","clarity: VVS2<br />carat: 0.30<br />price:   684","clarity: VVS2<br />carat: 0.52<br />price:  2012","clarity: VVS2<br />carat: 0.52<br />price:  1911","clarity: VVS2<br />carat: 0.91<br />price:  5708","clarity: VVS2<br />carat: 0.59<br />price:  2214"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(65,171,93,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(65,171,93,1)"}},"hoveron":"points","name":"VVS2","legendgroup":"VVS2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1.63,1.54,0.6,0.34,0.33,0.3,0.33,0.4,0.41,0.29,0.41,1.5,0.7,1.51,0.31,0.4,0.42,0.32,0.44,1,0.31,0.4,0.46,1.28,0.31,0.32,0.36,0.31,0.43,1,0.32,0.42,0.3,0.31,0.72,0.5,0.47,0.5,1.15,0.31,0.38,0.23,1.02,0.3,0.67,0.41,0.3,0.3,0.38,0.72,0.32,1.05,0.24,0.55,0.3,0.43,0.31,0.32,0.5,0.38,0.57,1.11,0.9,0.73,0.31,0.34],"y":[13211,9215,2528,862,730,737,984,1191,1157,664,1043,11688,2840,15420,977,1236,1307,1140,1143,7007,707,790,1412,11248,840,879,821,1105,1433,7945,842,884,665,1028,2642,2525,2460,1448,9025,789,1245,536,8005,620,2577,991,862,956,1033,2907,886,12315,485,1593,709,1207,798,730,1966,1257,2682,12956,4161,3487,816,1107],"text":["clarity: VVS1<br />carat: 1.63<br />price: 13211","clarity: VVS1<br />carat: 1.54<br />price:  9215","clarity: VVS1<br />carat: 0.60<br />price:  2528","clarity: VVS1<br />carat: 0.34<br />price:   862","clarity: VVS1<br />carat: 0.33<br />price:   730","clarity: VVS1<br />carat: 0.30<br />price:   737","clarity: VVS1<br />carat: 0.33<br />price:   984","clarity: VVS1<br />carat: 0.40<br />price:  1191","clarity: VVS1<br />carat: 0.41<br />price:  1157","clarity: VVS1<br />carat: 0.29<br />price:   664","clarity: VVS1<br />carat: 0.41<br />price:  1043","clarity: VVS1<br />carat: 1.50<br />price: 11688","clarity: VVS1<br />carat: 0.70<br />price:  2840","clarity: VVS1<br />carat: 1.51<br />price: 15420","clarity: VVS1<br />carat: 0.31<br />price:   977","clarity: VVS1<br />carat: 0.40<br />price:  1236","clarity: VVS1<br />carat: 0.42<br />price:  1307","clarity: VVS1<br />carat: 0.32<br />price:  1140","clarity: VVS1<br />carat: 0.44<br />price:  1143","clarity: VVS1<br />carat: 1.00<br />price:  7007","clarity: VVS1<br />carat: 0.31<br />price:   707","clarity: VVS1<br />carat: 0.40<br />price:   790","clarity: VVS1<br />carat: 0.46<br />price:  1412","clarity: VVS1<br />carat: 1.28<br />price: 11248","clarity: VVS1<br />carat: 0.31<br />price:   840","clarity: VVS1<br />carat: 0.32<br />price:   879","clarity: VVS1<br />carat: 0.36<br />price:   821","clarity: VVS1<br />carat: 0.31<br />price:  1105","clarity: VVS1<br />carat: 0.43<br />price:  1433","clarity: VVS1<br />carat: 1.00<br />price:  7945","clarity: VVS1<br />carat: 0.32<br />price:   842","clarity: VVS1<br />carat: 0.42<br />price:   884","clarity: VVS1<br />carat: 0.30<br />price:   665","clarity: VVS1<br />carat: 0.31<br />price:  1028","clarity: VVS1<br />carat: 0.72<br />price:  2642","clarity: VVS1<br />carat: 0.50<br />price:  2525","clarity: VVS1<br />carat: 0.47<br />price:  2460","clarity: VVS1<br />carat: 0.50<br />price:  1448","clarity: VVS1<br />carat: 1.15<br />price:  9025","clarity: VVS1<br />carat: 0.31<br />price:   789","clarity: VVS1<br />carat: 0.38<br />price:  1245","clarity: VVS1<br />carat: 0.23<br />price:   536","clarity: VVS1<br />carat: 1.02<br />price:  8005","clarity: VVS1<br />carat: 0.30<br />price:   620","clarity: VVS1<br />carat: 0.67<br />price:  2577","clarity: VVS1<br />carat: 0.41<br />price:   991","clarity: VVS1<br />carat: 0.30<br />price:   862","clarity: VVS1<br />carat: 0.30<br />price:   956","clarity: VVS1<br />carat: 0.38<br />price:  1033","clarity: VVS1<br />carat: 0.72<br />price:  2907","clarity: VVS1<br />carat: 0.32<br />price:   886","clarity: VVS1<br />carat: 1.05<br />price: 12315","clarity: VVS1<br />carat: 0.24<br />price:   485","clarity: VVS1<br />carat: 0.55<br />price:  1593","clarity: VVS1<br />carat: 0.30<br />price:   709","clarity: VVS1<br />carat: 0.43<br />price:  1207","clarity: VVS1<br />carat: 0.31<br />price:   798","clarity: VVS1<br />carat: 0.32<br />price:   730","clarity: VVS1<br />carat: 0.50<br />price:  1966","clarity: VVS1<br />carat: 0.38<br />price:  1257","clarity: VVS1<br />carat: 0.57<br />price:  2682","clarity: VVS1<br />carat: 1.11<br />price: 12956","clarity: VVS1<br />carat: 0.90<br />price:  4161","clarity: VVS1<br />carat: 0.73<br />price:  3487","clarity: VVS1<br />carat: 0.31<br />price:   816","clarity: VVS1<br />carat: 0.34<br />price:  1107"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(35,139,69,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(35,139,69,1)"}},"hoveron":"points","name":"VVS1","legendgroup":"VVS1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.35,0.3,0.4,1.11,0.63,1.14,0.31,1.21,0.34,0.27,0.4,0.34,0.33,0.41,0.33,0.7,0.74,0.67,0.31,0.35,0.55,0.31,0.41,1.02,0.3,0.31,0.34,1.18,0.6,0.5,0.38,0.33],"y":[1116,873,1238,9931,6607,10313,914,8294,974,566,1063,974,891,1439,891,3591,2277,3271,914,1001,2098,901,1621,15370,886,789,1243,6867,2800,1976,886,959],"text":["clarity: IF<br />carat: 0.35<br />price:  1116","clarity: IF<br />carat: 0.30<br />price:   873","clarity: IF<br />carat: 0.40<br />price:  1238","clarity: IF<br />carat: 1.11<br />price:  9931","clarity: IF<br />carat: 0.63<br />price:  6607","clarity: IF<br />carat: 1.14<br />price: 10313","clarity: IF<br />carat: 0.31<br />price:   914","clarity: IF<br />carat: 1.21<br />price:  8294","clarity: IF<br />carat: 0.34<br />price:   974","clarity: IF<br />carat: 0.27<br />price:   566","clarity: IF<br />carat: 0.40<br />price:  1063","clarity: IF<br />carat: 0.34<br />price:   974","clarity: IF<br />carat: 0.33<br />price:   891","clarity: IF<br />carat: 0.41<br />price:  1439","clarity: IF<br />carat: 0.33<br />price:   891","clarity: IF<br />carat: 0.70<br />price:  3591","clarity: IF<br />carat: 0.74<br />price:  2277","clarity: IF<br />carat: 0.67<br />price:  3271","clarity: IF<br />carat: 0.31<br />price:   914","clarity: IF<br />carat: 0.35<br />price:  1001","clarity: IF<br />carat: 0.55<br />price:  2098","clarity: IF<br />carat: 0.31<br />price:   901","clarity: IF<br />carat: 0.41<br />price:  1621","clarity: IF<br />carat: 1.02<br />price: 15370","clarity: IF<br />carat: 0.30<br />price:   886","clarity: IF<br />carat: 0.31<br />price:   789","clarity: IF<br />carat: 0.34<br />price:  1243","clarity: IF<br />carat: 1.18<br />price:  6867","clarity: IF<br />carat: 0.60<br />price:  2800","clarity: IF<br />carat: 0.50<br />price:  1976","clarity: IF<br />carat: 0.38<br />price:   886","clarity: IF<br />carat: 0.33<br />price:   959"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,90,50,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,90,50,1)"}},"hoveron":"points","name":"IF","legendgroup":"IF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":23.3059360730594,"r":7.30593607305936,"b":37.2602739726027,"l":54.7945205479452},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"type":"linear","autorange":false,"tickmode":"array","range":[0.0785,2.7515],"ticktext":["1","2"],"tickvals":[1,2],"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"carat","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"type":"linear","autorange":false,"tickmode":"array","range":[-579.85,19568.85],"ticktext":["0","5000","10000","15000"],"tickvals":[0,5000,10000,15000],"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":"price","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.938132733408324},"annotations":[{"text":"clarity","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest"},"source":"A","attrs":{"1fef2f4bac69":{"colour":{},"x":{},"y":{},"type":"ggplotly"}},"cur_data":"1fef2f4bac69","visdat":{"1fef2f4bac69":["function (y) ","x"]},"config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"cloud":false},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1}},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":{"render":[{"code":"function(el, x) { var ctConfig = crosstalk.var('plotlyCrosstalkOpts').set({\"on\":\"plotly_click\",\"persistent\":false,\"dynamic\":false,\"selectize\":false,\"opacityDim\":0.2,\"selected\":{\"opacity\":1}}); }","data":null}]}}</script>
+
+---
+###Quick intro to building Shiny apps
+
+Shiny apps allow you to create interactive web apps using R.
+
+You can see an example of a shiny app for interrogating government petition data [here](https://rekarrr.shinyapps.io/trumpPetition/) 
+
+and another one for looking at collisions in London [here](https://rcatlord.shinyapps.io/STATS19_scanner/)
+
+You can use shiny to build relatively flashy-looking things with short time/ effort. For example, [this app](https://rekarrr.shinyapps.io/UKDS_data_dive_prototype/) 
+---
+
+
+###Installing shiny
+
+As usual, you will need to install the package from cran, 
+
+
+```r
+install.packages("shiny")
+```
+
+and then load it up in your R session.
+
+
+```r
+library("shiny")
+```
+
+
+---
+
+###Anatomy of a shiny app
+
+2 componenets: 
+
+- ui.R
+- server.r 
+
+Optional 3rd: 
+
+- css file (more on this [here](http://shiny.rstudio.com/articles/css.html)) 
+
+---
+
+###Blank example
+
+Here is a shiny app that does nothing, just to illustrate the layout of an app: 
+
+
+```r
+ui &lt;- fluidPage(
+  titlePanel("title panel"),
+
+  sidebarLayout(
+    sidebarPanel( "sidebar panel"),
+    mainPanel("main panel")
+  )
+)
+
+server &lt;- function(input, output) {
+  #this app literally does nothing
+}
+
+
+shinyApp(ui = ui, server = server)
+```
+
+---
+
+###Using actual data
+####Get data
+
+
+```r
+#get data 
+library(jsonlite)
+l = readLines("https://petition.parliament.uk/archived/petitions/131215.json", encoding="UTF-8", warn=FALSE)
+data1 = fromJSON(l)
+signByCountry &lt;- as.data.frame(data1$data$attributes$signatures_by_country) 
+```
+
+---
+
+###plotOutput()
+
+`plotOutput("name of plot")`. You can specify plot dimensions, and a whole range of other arguments, which you can read about [here](http://shiny.rstudio.com/reference/shiny/latest/plotOutput.html). 
+
+
+
+```r
+library(ggplot2)
+#here's the ui file
+ui &lt;- fluidPage(
+  headerPanel('This is a title'), 
+  sidebarPanel(
+  ), 
+  mainPanel(
+    #put here that a plot will be placed here called countriesPlot
+    plotOutput("coutriesPlot", height = 10000)
+  )
+)
+server &lt;- function(input, output) {
+  #create the plot here called countriesPlot
+  output$coutriesPlot &lt;- renderPlot({
+                                  signByCountry &lt;- transform(signByCountry,  
+                                                         name = reorder(name, signature_count)) 
+                                  c &lt;- ggplot(signByCountry, 
+                                              aes(x = factor(name), y = signature_count)) 
+                                  c + geom_bar(stat="identity") + coord_flip() +  
+                                     xlab("Name of country") + 
+                                     ylab("Number of signatures from country") 
+  })
+} 
+shinyApp(ui = ui, server = server)
+```
+
+---
+
+###Add interactivity
+
+
+```r
+#here's the ui file
+ui &lt;- fluidPage(
+  headerPanel('How many people signed the petition?'), 
+  sidebarPanel(
+    uiOutput('countrySelector',selected = "United Kingdom") 
+  ), 
+  mainPanel(
+    #put here that a plot will be placed here called countriesPlot
+    textOutput("text1")
+  )
+)
+#andhere's the server file
+server &lt;- function(input, output) {
+  #create a list of options to select
+  countryChoices &lt;- sort(unique(as.character(signByCountry$name)))
+  #create the drop down menu with name country selector to put in placeholder in UI
+  output$countrySelector &lt;- renderUI({
+	                          	selectInput("countrySelect", label = "Select country",
+					                    choices = as.list(countryChoices), selected = "United Kingdom")
+	})
+  output$text1 &lt;- renderText({
+    df &lt;- signByCountry[which(signByCountry$name==input$countrySelect),]
+    paste0("There are ", df$signature_count, " signatures from ", input$countrySelect)
+  })
+} 
+shinyApp(ui = ui, server = server)
+```
+
+
+
+---
+
+###Maps
+
+You will need to have installed the following packages for interactive mapping:
+
+
+```r
+install.packages("leaflet") #for mapping
+install.packages("RColorBrewer") #for getting nice colours for your maps
+```
+
+---
+
+###Making a map
+
+To make a map, just load the leaflet library:
+
+
+```r
+library(leaflet)
+```
+
+You then create a map with this simple bit of code:
+
+
+```r
+m &lt;- leaflet() %&gt;%
+  addTiles()  
+```
+
+And just print it:
+
+```r
+m  
+```
+
+<div id="htmlwidget-b26268e269b8f31914a4" style="width:504px;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b26268e269b8f31914a4">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
+
+
+---
+
+###Adding points manually
+
+You can add a point manually:
+
+
+```r
+m &lt;- leaflet() %&gt;%
+  addTiles()  %&gt;% 
+  addMarkers(lng=-2.230899, lat=53.464987, popup="You are here")
+m  
+```
+
+<div id="htmlwidget-7f95593dee0fc940a5aa" style="width:504px;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7f95593dee0fc940a5aa">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[53.464987,-2.230899,null,null,null,{"clickable":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"You are here",null,null,null,null,null,null]}],"limits":{"lat":[53.464987,53.464987],"lng":[-2.230899,-2.230899]}},"evals":[],"jsHooks":[]}</script>
+
+
+---
+###Or many points manually
+
+
+```r
+latitudes = c(53.464987, 53.472726, 53.466649) 
+longitudes = c(-2.230899, -2.245481, -2.243421) 
+popups = c("You are here", "Here is another point", "Here is another point") 
+df = data.frame(latitudes, longitudes, popups)      
+
+m &lt;- leaflet(data = df) %&gt;%
+  addTiles()  %&gt;%  
+  addMarkers(lng=~longitudes, lat=~latitudes, popup=~popups)
+m  
+```
+
+<div id="htmlwidget-b5396fba064174a07160" style="width:504px;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b5396fba064174a07160">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[53.464987,53.472726,53.466649],[-2.230899,-2.245481,-2.243421],null,null,null,{"clickable":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["You are here","Here is another point","Here is another point"],null,null,null,null,null,null]}],"limits":{"lat":[53.464987,53.472726],"lng":[-2.245481,-2.230899]}},"evals":[],"jsHooks":[]}</script>
+
+---
+###Change the basemap
+
+You can change the background as well. You can find a list of different basemaps [here](http://leaflet-extras.github.io/leaflet-providers/preview/index.html).
+
+
+```r
+m &lt;- leaflet(data = df) %&gt;%
+  addProviderTiles("Stamen.Toner") %&gt;% 
+  addMarkers(lng=~longitudes, lat=~latitudes, popup=~popups)
+m  
+```
+
+<div id="htmlwidget-17be5c8af1f3f12ab5e3" style="width:504px;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-17be5c8af1f3f12ab5e3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addProviderTiles","args":["Stamen.Toner",null,null,{"errorTileUrl":"","noWrap":false,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false}]},{"method":"addMarkers","args":[[53.464987,53.472726,53.466649],[-2.230899,-2.245481,-2.243421],null,null,null,{"clickable":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["You are here","Here is another point","Here is another point"],null,null,null,null,null,null]}],"limits":{"lat":[53.464987,53.472726],"lng":[-2.245481,-2.230899]}},"evals":[],"jsHooks":[]}</script>
+
+---
+###Adding data from elsewhere
+
+You will most likely want to add data to your map form external sources, rather than manually creating points. 
+
+For example, I illustrate here with data from [Manchester Open Data](http://open.manchester.gov.uk/) about public toilets: 
+
+
+```r
+publicToilets &lt;- read.csv("http://www.manchester.gov.uk/open/download/downloads/id/171/public_toilets.csv")
+```
+
+
+---
+###Coordinates
+
+First thing we might notice is that the coordinates are in Easting and Northing format, rather than Latitude/ Longitude: 
+
+
+```r
+publicToilets[,8:9]
+```
+
+```
+##     GeoX   GeoY
+## 1 383958 398732
+## 2 384245 398416
+## 3 383873 398647
+## 4 383643 398363
+## 5 383950 398449
+## 6 383194 397863
+## 7 383312 398333
+## 8 383923 398633
+## 9 383864 398033
+```
+
+There is a comprehensive step-by-step tutorial on converting coordinates [here](http://www.alex-singleton.com/R-Tutorial-Materials/7-converting-coordinates.pdf). I'll just briefly demo this here.
+
+
+---
+###Reprojecting coordinates
+
+
+```r
+#the library I'm using here is rgdal
+library(rgdal)
+
+#these are the variables for the coordinate system types
+bng = "+init=epsg:27700"
+latlong = "+init=epsg:4326"
+
+#create coords
+coords &lt;- cbind(Easting = as.numeric(as.character(publicToilets$GeoX)),
+                Northing = as.numeric(as.character(publicToilets$GeoY)))
+
+# create a SpatialPointsDataFrame
+publicToiletsSPDF &lt;- SpatialPointsDataFrame(coords, data = publicToilets, proj4string = CRS(bng))
+
+#reproject with spTransform
+publicToiletsSPDF_latlng &lt;- spTransform(publicToiletsSPDF, CRS(latlong))
+
+#extract coords into a column
+publicToiletsSPDF_latlng@data$lng &lt;- publicToiletsSPDF_latlng@coords[,1]
+publicToiletsSPDF_latlng@data$lat &lt;- publicToiletsSPDF_latlng@coords[,2]
+```
+
+
+---
+###Map reprojected coordinates
+
+Now you should have a reprojected spatial points data frame with latitude and longitude, ready to be mapped: 
+
+
+```r
+m &lt;- leaflet(data = publicToiletsSPDF_latlng@data) %&gt;%
+  addProviderTiles("Stamen.Toner")  %&gt;%  
+  addMarkers(lng=~lng, lat=~lat, popup=~LocationText)
+m  
+```
+
+<div id="htmlwidget-34c4a466fb7c8329e70f" style="width:504px;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-34c4a466fb7c8329e70f">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addProviderTiles","args":["Stamen.Toner",null,null,{"errorTileUrl":"","noWrap":false,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false}]},{"method":"addMarkers","args":[[53.4850564318861,53.4822248449733,53.484289806183,53.4817299678266,53.4825124835665,53.4772215518937,53.4814498552881,53.4841655099042,53.478770680729],[-2.2432186066177,-2.23887763262959,-2.24449513180843,-2.24794619505282,-2.24332459233147,-2.25468500591213,-2.25293226112205,-2.24374093919751,-2.24459897756311],null,null,null,{"clickable":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Corn Exchange","Debenhams","Harvey Nichols","House of Fraser","Manchester Arndale","Museum of Science and Industry","Peoples History Museum","Selfridges and Co","Manchester Town Hall"],null,null,null,null,null,null]}],"limits":{"lat":[53.4772215518937,53.4850564318861],"lng":[-2.25468500591213,-2.23887763262959]}},"evals":[],"jsHooks":[]}</script>
+
+
+
+---
+###Back to Shiny integration
+
+
+```r
+library(dplyr)
+ui &lt;- fluidPage(
+  titlePanel("Public Toilets in Manchester"),
+  sidebarLayout(
+    sidebarPanel( 
+      #street address selector goes here 
+      uiOutput('streetAddSelector', selected = "Exchange Square")
+      ),
+    mainPanel(
+      #leaflet output goes here
+      leafletOutput("map", height = 800)
+    )
+  )
+)
+server &lt;- function(input, output) {
+  streetAddChoices &lt;- sort(unique(as.character(publicToiletsSPDF_latlng@data$StreetAddress)))
+  #create the drop down menu with street address selector to put in placeholder in UI
+  output$streetAddSelector &lt;- renderUI({
+	                          	selectInput("streetAddSelect", label = "Select street address",
+					                    choices = as.list(streetAddChoices), selected = "Exchange Square")
+  })
+  #filter data based on input
+  dataFiltered &lt;- reactive({
+    thing &lt;- publicToiletsSPDF_latlng@data %&gt;% filter(StreetAddress %in% input$streetAddSelect)
+  })
+  #reactive map
+  output$map &lt;- renderLeaflet({
+    leaflet(data = publicToiletsSPDF_latlng@data) %&gt;%
+  addProviderTiles("Stamen.Toner")  %&gt;%  
+  addMarkers(lng=~lng, lat=~lat, popup=~LocationText)
+    })
+  observe({
+    leafletProxy("map", data = dataFiltered()) %&gt;% clearMarkers() %&gt;%
+      addMarkers(lng=~lng, lat=~lat, popup=~LocationText)
+  })
+} 
+shinyApp(ui = ui, server = server)
+```
+
+
+---
+###Questions?
+
+- Reka.Solymosi@manchester.ac.uk
+- @r_solymosi
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
